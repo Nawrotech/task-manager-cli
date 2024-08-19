@@ -99,4 +99,14 @@ class TasksManagerTest extends TestCase
         $tasksManager->delete(1);
         $this->assertCount(0, $tasksManager->list()["Tasks"]);
     }
+
+    public function testAddedTasksAreListed()
+    {
+        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager->add("foo");
+        $tasksManager->add("bar");
+        $tasksManager->add("baz");
+
+        $this->assertCount(3, $tasksManager->list()["Tasks"]);
+    }
 }
