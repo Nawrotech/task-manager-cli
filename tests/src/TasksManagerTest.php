@@ -5,22 +5,25 @@ namespace App\Tests;
 use PHPUnit\Framework\TestCase;
 use App\TasksManager;
 
-class TasksManagerTest extends TestCase {
+class TasksManagerTest extends TestCase
+{
 
     private string $tempFile;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $this->tempFile = tempnam(sys_get_temp_dir(), 'tasks');
-
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         if (file_exists($this->tempFile)) {
             unlink($this->tempFile);
         }
     }
 
-    public function testTasksPropertyIsInitializedWithGivenResource() {
+    public function testTasksPropertyIsInitializedWithGivenResource()
+    {
 
         $tasksArr = ['Tasks' => [['id' => 1, 'name' => 'Test Task']]];
         $tasksData = json_encode($tasksArr);
@@ -28,17 +31,18 @@ class TasksManagerTest extends TestCase {
 
         $tasksManager = new TasksManager($this->tempFile);
         $this->assertSame($tasksArr, $tasksManager->list());
-
     }
 
-    public function testTasksPropertyHasFallbackWhenResourceIsEmptyOrNonExistent() {
+    public function testTasksPropertyHasFallbackWhenResourceIsEmptyOrNonExistent()
+    {
         $tasksManager = new TasksManager($this->tempFile);
         $this->assertSame(["Tasks" => []], $tasksManager->list());
     }
 
 
 
-    public function testTaskOfGivenDescriptionIsAdded() {
+    public function testTaskOfGivenDescriptionIsAdded()
+    {
         $tasksManager =  new TasksManager($this->tempFile);
         $tasksManager->add("foo");
 
@@ -47,10 +51,10 @@ class TasksManagerTest extends TestCase {
 
         $addedTask = $tasks[0];
         $this->assertSame("foo", $addedTask["description"]);
-
     }
 
-    public function testMultipleTasksAreAdded() {
+    public function testMultipleTasksAreAdded()
+    {
         $tasksManager =  new TasksManager($this->tempFile);
         $tasksManager->add("foo");
         $tasksManager->add("bar");
@@ -61,13 +65,16 @@ class TasksManagerTest extends TestCase {
 
         $lastTask = $tasks[2];
         $this->assertSame(3, $lastTask["id"]);
-        
     }
 
-    
+    public function testTaskIsMarkedAsDone()
+    {
+        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager->add("foo");
 
+        $tasksManager->markDone(1);
+        $tasks = $tasksManager->list()["Tasks"];
 
-
-   
-    
+        $this->assertSame("done", $tasks[0]["status"]);
+    }
 }
