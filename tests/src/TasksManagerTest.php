@@ -77,4 +77,15 @@ class TasksManagerTest extends TestCase
 
         $this->assertSame("done", $tasks[0]["status"]);
     }
+
+    public function testTaskIsMarkedAsInProgress()
+    {
+        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager->add("foo");
+
+        $tasksManager->markInProgress(1);
+        $tasks = $tasksManager->list()["Tasks"];
+
+        $this->assertSame("in-progress", $tasks[0]["status"]);
+    }
 }
