@@ -88,4 +88,15 @@ class TasksManagerTest extends TestCase
 
         $this->assertSame("in-progress", $tasks[0]["status"]);
     }
+
+    public function testTaskIsDeleted()
+    {
+        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager->add("foo");;
+
+        $this->assertCount(1,  $tasksManager->list()["Tasks"]);
+
+        $tasksManager->delete(1);
+        $this->assertCount(0, $tasksManager->list()["Tasks"]);
+    }
 }
