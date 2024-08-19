@@ -11,6 +11,7 @@ class TasksManagerTest extends TestCase {
 
     protected function setUp(): void {
         $this->tempFile = tempnam(sys_get_temp_dir(), 'tasks');
+
     }
 
     protected function tearDown(): void {
@@ -35,7 +36,37 @@ class TasksManagerTest extends TestCase {
         $this->assertSame(["Tasks" => []], $tasksManager->list());
     }
 
+
+
+    public function testTaskOfGivenDescriptionIsAdded() {
+        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager->add("foo");
+
+        $tasks = $tasksManager->list()["Tasks"];
+        $this->assertCount(1, $tasks);
+
+        $addedTask = $tasks[0];
+        $this->assertSame("foo", $addedTask["description"]);
+
+    }
+
+    public function testMultipleTasksAreAdded() {
+        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager->add("foo");
+        $tasksManager->add("bar");
+        $tasksManager->add("baz");
+
+        $tasks = $tasksManager->list()["Tasks"];
+        $this->assertCount(3, $tasks);
+
+        $lastTask = $tasks[2];
+        $this->assertSame(3, $lastTask["id"]);
+        
+    }
+
     
+
+
 
    
     
