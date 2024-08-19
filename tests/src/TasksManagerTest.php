@@ -129,4 +129,16 @@ class TasksManagerTest extends TestCase
         $this->assertCount(2, $tasksManager->list(TaskStatus::IN_PROGRESS));
         $this->assertCount(3, $tasksManager->list(TaskStatus::DONE));
     }
+
+    public function testTaskDescriptionIsUpdated()
+    {
+        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager->add("foo");
+
+        $tasksManager->list();
+        $this->assertSame("foo", $tasksManager->list()[0]["description"]);
+
+        $tasksManager->update(1, "foobarbaz");
+        $this->assertSame("foobarbaz", $tasksManager->list()[0]["description"]);
+    }
 }
