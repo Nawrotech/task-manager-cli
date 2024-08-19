@@ -77,7 +77,7 @@ class TasksManager
     public function list(?TaskStatus $status = null)
     {
         if (!$status) {
-            return $this->tasks;
+            return $this->tasks["Tasks"];
         }
 
         return $this->filterByStatus($status);

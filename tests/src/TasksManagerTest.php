@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
 use App\TasksManager;
+use App\TaskStatus;
 
 class TasksManagerTest extends TestCase
 {
@@ -25,18 +26,18 @@ class TasksManagerTest extends TestCase
     public function testTasksPropertyIsInitializedWithGivenResource()
     {
 
-        $tasksArr = ['Tasks' => [['id' => 1, 'name' => 'Test Task']]];
+        $tasksArr = ["Tasks" => [['id' => 1, 'name' => 'Test Task']]];
         $tasksData = json_encode($tasksArr);
         file_put_contents($this->tempFile, $tasksData);
 
         $tasksManager = new TasksManager($this->tempFile);
-        $this->assertSame($tasksArr, $tasksManager->list());
+        $this->assertSame($tasksArr["Tasks"], $tasksManager->list());
     }
 
     public function testTasksPropertyHasFallbackWhenResourceIsEmptyOrNonExistent()
     {
         $tasksManager = new TasksManager($this->tempFile);
-        $this->assertSame(["Tasks" => []], $tasksManager->list());
+        $this->assertEmpty($tasksManager->list());
     }
 
 
@@ -46,7 +47,7 @@ class TasksManagerTest extends TestCase
         $tasksManager =  new TasksManager($this->tempFile);
         $tasksManager->add("foo");
 
-        $tasks = $tasksManager->list()["Tasks"];
+        $tasks = $tasksManager->list();
         $this->assertCount(1, $tasks);
 
         $addedTask = $tasks[0];
@@ -60,7 +61,7 @@ class TasksManagerTest extends TestCase
         $tasksManager->add("bar");
         $tasksManager->add("baz");
 
-        $tasks = $tasksManager->list()["Tasks"];
+        $tasks = $tasksManager->list();
         $this->assertCount(3, $tasks);
 
         $lastTask = $tasks[2];
@@ -73,7 +74,7 @@ class TasksManagerTest extends TestCase
         $tasksManager->add("foo");
 
         $tasksManager->markDone(1);
-        $tasks = $tasksManager->list()["Tasks"];
+        $tasks = $tasksManager->list();
 
         $this->assertSame("done", $tasks[0]["status"]);
     }
@@ -84,7 +85,7 @@ class TasksManagerTest extends TestCase
         $tasksManager->add("foo");
 
         $tasksManager->markInProgress(1);
-        $tasks = $tasksManager->list()["Tasks"];
+        $tasks = $tasksManager->list();
 
         $this->assertSame("in-progress", $tasks[0]["status"]);
     }
@@ -94,10 +95,10 @@ class TasksManagerTest extends TestCase
         $tasksManager =  new TasksManager($this->tempFile);
         $tasksManager->add("foo");;
 
-        $this->assertCount(1,  $tasksManager->list()["Tasks"]);
+        $this->assertCount(1,  $tasksManager->list());
 
         $tasksManager->delete(1);
-        $this->assertCount(0, $tasksManager->list()["Tasks"]);
+        $this->assertCount(0, $tasksManager->list());
     }
 
     public function testAddedTasksAreListed()
@@ -107,6 +108,25 @@ class TasksManagerTest extends TestCase
         $tasksManager->add("bar");
         $tasksManager->add("baz");
 
-        $this->assertCount(3, $tasksManager->list()["Tasks"]);
+        $this->assertCount(3, $tasksManager->list());
+    }
+
+    public function testTasksAreFiltered()
+    {
+        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager->add("foo");
+        $tasksManager->add("bar");
+        $tasksManager->add("baz");
+        $tasksManager->add("foo");
+        $tasksManager->add("baz");
+        $this->assertCount(5, $tasksManager->list(TaskStatus::TODO));
+
+        $tasksManager->markInProgress(1);
+        $tasksManager->markInProgress(2);
+        $tasksManager->markDone(3);
+        $tasksManager->markDone(4);
+        $tasksManager->markDone(5);
+        $this->assertCount(2, $tasksManager->list(TaskStatus::IN_PROGRESS));
+        $this->assertCount(3, $tasksManager->list(TaskStatus::DONE));
     }
 }
