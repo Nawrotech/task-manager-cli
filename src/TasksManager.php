@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App;
 
-class TasksManager
+class TasksManager implements TasksManagerInterface
 {
 
     private array $tasks;
-
 
     public function __construct(
         private string $tasksPath = DATA_PATH . "/tasks.json"
@@ -43,7 +42,6 @@ class TasksManager
 
     public function update(int $id, string $description)
     {
-
         return $this->updateTaskProperty($id, "description", $description);
     }
 
