@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-class TasksManager implements TasksManagerInterface
+class TaskManager implements TaskManagerInterface
 {
 
     private array $tasks;
@@ -24,6 +24,8 @@ class TasksManager implements TasksManagerInterface
 
     public function add(string $description): string
     {
+
+
         $id = $this->getLastTaskId() ?? 0;
         $id++;
 
@@ -120,7 +122,7 @@ class TasksManager implements TasksManagerInterface
 
     private function getLastTaskId()
     {
-        return end($this->tasks["Tasks"])["id"];
+        return end($this->tasks["Tasks"])["id"] ?? null;
     }
 
     private function applyChanges(): void

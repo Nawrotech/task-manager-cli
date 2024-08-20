@@ -1,24 +1,3 @@
 {
-    "Tasks":[
-        {
-            "id":1,
-            "description":"wash dishes",
-            "status":"todo",
-            "createdAt":"2022-12-12",
-            "updatedAt":"2022-12-12"
-        },
-        {
-            "id":2,"description":"take a walk",
-            "status":"in-progress",
-            "createdAt":"2022-12-12",
-            "updatedAt":"2022-12-12"
-        },
-        {
-            "id":3,
-            "description":"play video games",
-            "status":"done",
-            "createdAt":"2022-12-12",
-            "updatedAt":"2022-12-12"
-        }
-    ]
+  "Tasks": []
 }

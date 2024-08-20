@@ -2,13 +2,13 @@
 
 <?php
 
-use App\TasksManager;
 use App\TaskStatus;
 use App\Helper;
+use App\TaskManager;
 
 require dirname(__DIR__) . '/bootstrap.php';
 
-$taskManager = new TasksManager();
+$taskManager = new TaskManager();
 $methodName = Helper::toCamelCase($argv[1]);
 $arguments = array_slice($argv, 2);
 

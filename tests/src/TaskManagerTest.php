@@ -3,10 +3,10 @@
 namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
-use App\TasksManager;
+use App\TaskManager;
 use App\TaskStatus;
 
-class TasksManagerTest extends TestCase
+class TaskManagerTest extends TestCase
 {
 
     private string $tempFile;
@@ -30,13 +30,13 @@ class TasksManagerTest extends TestCase
         $tasksData = json_encode($tasksArr);
         file_put_contents($this->tempFile, $tasksData);
 
-        $tasksManager = new TasksManager($this->tempFile);
+        $tasksManager = new TaskManager($this->tempFile);
         $this->assertSame($tasksArr["Tasks"], $tasksManager->list());
     }
 
     public function testTasksPropertyHasFallbackWhenResourceIsEmptyOrNonExistent()
     {
-        $tasksManager = new TasksManager($this->tempFile);
+        $tasksManager = new TaskManager($this->tempFile);
         $this->assertEmpty($tasksManager->list());
     }
 
@@ -44,7 +44,7 @@ class TasksManagerTest extends TestCase
 
     public function testTaskOfGivenDescriptionIsAdded()
     {
-        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager =  new TaskManager($this->tempFile);
         $tasksManager->add("foo");
 
         $tasks = $tasksManager->list();
@@ -56,7 +56,7 @@ class TasksManagerTest extends TestCase
 
     public function testMultipleTasksAreAdded()
     {
-        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager =  new TaskManager($this->tempFile);
         $tasksManager->add("foo");
         $tasksManager->add("bar");
         $tasksManager->add("baz");
@@ -70,7 +70,7 @@ class TasksManagerTest extends TestCase
 
     public function testTaskIsMarkedAsDone()
     {
-        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager =  new TaskManager($this->tempFile);
         $tasksManager->add("foo");
 
         $tasksManager->markDone(1);
@@ -81,7 +81,7 @@ class TasksManagerTest extends TestCase
 
     public function testTaskIsMarkedAsInProgress()
     {
-        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager =  new TaskManager($this->tempFile);
         $tasksManager->add("foo");
 
         $tasksManager->markInProgress(1);
@@ -92,7 +92,7 @@ class TasksManagerTest extends TestCase
 
     public function testTaskIsDeleted()
     {
-        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager =  new TaskManager($this->tempFile);
         $tasksManager->add("foo");;
 
         $this->assertCount(1,  $tasksManager->list());
@@ -103,7 +103,7 @@ class TasksManagerTest extends TestCase
 
     public function testAddedTasksAreListed()
     {
-        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager =  new TaskManager($this->tempFile);
         $tasksManager->add("foo");
         $tasksManager->add("bar");
         $tasksManager->add("baz");
@@ -113,7 +113,7 @@ class TasksManagerTest extends TestCase
 
     public function testTasksAreFiltered()
     {
-        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager =  new TaskManager($this->tempFile);
         $tasksManager->add("foo");
         $tasksManager->add("bar");
         $tasksManager->add("baz");
@@ -132,7 +132,7 @@ class TasksManagerTest extends TestCase
 
     public function testTaskDescriptionIsUpdated()
     {
-        $tasksManager =  new TasksManager($this->tempFile);
+        $tasksManager =  new TaskManager($this->tempFile);
         $tasksManager->add("foo");
 
         $tasksManager->list();

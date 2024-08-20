@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-interface TasksManagerInterface
+interface TaskManagerInterface
 {
     public function add(string $description);
     public function update(int $id, string $description);
